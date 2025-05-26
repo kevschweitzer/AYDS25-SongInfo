@@ -27,6 +27,6 @@ class OtherInfoRepositoryImpl(
         return artistBiography
     }
 
-    private fun ArtistBiography.markItAsLocal() = copy(biography = "[*]$biography")
+    private fun ArtistBiography.markItAsLocal() = copy(isLocallyStored = true)
 
 }
