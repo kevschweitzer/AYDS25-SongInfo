@@ -1,6 +1,5 @@
 package ayds.songinfo.moredetails.data
 
-import ayds.artist.external.lastfm.LastFmBiography
 import ayds.songinfo.moredetails.data.broker.OtherInfoBroker
 import ayds.songinfo.moredetails.data.local.OtherInfoLocalStorage
 import ayds.songinfo.moredetails.domain.Card
