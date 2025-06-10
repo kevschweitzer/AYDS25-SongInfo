@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.data
 
-import ayds.songinfo.moredetails.data.external.OtherInfoService
+import ayds.artist.external.lastfm.LastFmBiography
 import ayds.songinfo.moredetails.data.local.OtherInfoLocalStorage
 import ayds.songinfo.moredetails.domain.ArtistBiography
 import ayds.songinfo.moredetails.domain.OtherInfoRepository
@@ -14,8 +14,8 @@ import org.junit.Test
 class OtherInfoRepositoryTest {
 
     private val otherInfoLocalStorage: OtherInfoLocalStorage = mockk()
-    private val otherInfoService: OtherInfoService = mockk()
-    private val otherInfoRepository: OtherInfoRepository = OtherInfoRepositoryImpl(otherInfoLocalStorage, otherInfoService)
+    private val lastFMService: ayds.artist.external.lastfm.LastFmService = mockk()
+    private val otherInfoRepository: OtherInfoRepository = OtherInfoRepositoryImpl(otherInfoLocalStorage, lastFMService)
 
     @Test
     fun `on getArtistInfo call getArticle from local storage`() {
@@ -30,9 +30,10 @@ class OtherInfoRepositoryTest {
 
     @Test
     fun `on getArtistInfo call getArticle from service`() {
+        val lastFmBiography = LastFmBiography("artist", "biography", "url")
         val artistBiography = ArtistBiography("artist", "biography", "url", false)
         every { otherInfoLocalStorage.getArticle("artist") } returns null
-        every { otherInfoService.getArticle("artist") } returns artistBiography
+        every { lastFMService.getArticle("artist") } returns lastFmBiography
         every { otherInfoLocalStorage.insertArtist(artistBiography) } returns Unit
 
         val result = otherInfoRepository.getArtistInfo("artist")
@@ -44,9 +45,10 @@ class OtherInfoRepositoryTest {
 
     @Test
     fun `on empty bio, getArtistInfo call getArticle from service`() {
+        val lastFmBiography = LastFmBiography("artist", "", "url")
         val artistBiography = ArtistBiography("artist", "", "url", false)
         every { otherInfoLocalStorage.getArticle("artist") } returns null
-        every { otherInfoService.getArticle("artist") } returns artistBiography
+        every { lastFMService.getArticle("artist") } returns lastFmBiography
 
         val result = otherInfoRepository.getArtistInfo("artist")
 
