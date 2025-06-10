@@ -3,7 +3,13 @@ package ayds.songinfo.moredetails.injector
 import android.content.Context
 import androidx.room.Room
 import ayds.artist.external.lastfm.LastFmInjector
+import ayds.artist.external.newyorktimes.injector.NYTimesInjector
+import ayds.artist.external.wikipedia.injector.WikipediaInjector
 import ayds.songinfo.moredetails.data.OtherInfoRepositoryImpl
+import ayds.songinfo.moredetails.data.broker.LastFMProxy
+import ayds.songinfo.moredetails.data.broker.NYTimesProxy
+import ayds.songinfo.moredetails.data.broker.OtherInfoBrokerImpl
+import ayds.songinfo.moredetails.data.broker.WikipediaProxy
 import ayds.songinfo.moredetails.data.local.CardDatabase
 import ayds.songinfo.moredetails.data.local.OtherInfoLocalStorageImpl
 import ayds.songinfo.moredetails.domain.OtherInfoRepository
@@ -27,7 +33,11 @@ object OtherInfoInjector {
 
         val articleLocalStorage = OtherInfoLocalStorageImpl(cardDatabase)
 
-        val repository: OtherInfoRepository = OtherInfoRepositoryImpl(articleLocalStorage, LastFmInjector.lastFmService)
+        val lastFMProxy = LastFMProxy(LastFmInjector.lastFmService)
+        val wikipediaProxy = WikipediaProxy(WikipediaInjector.wikipediaTrackService)
+        val nyTimesProxy = NYTimesProxy(NYTimesInjector.nyTimesService)
+        val otherInfoBroker = OtherInfoBrokerImpl(listOf(lastFMProxy, wikipediaProxy, nyTimesProxy))
+        val repository: OtherInfoRepository = OtherInfoRepositoryImpl(articleLocalStorage, otherInfoBroker)
 
         val artistBiographyDescriptionHelper = CardDescriptionHelperImpl()
 

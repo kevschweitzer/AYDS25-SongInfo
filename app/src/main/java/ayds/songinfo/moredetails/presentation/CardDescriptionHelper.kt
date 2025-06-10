@@ -29,6 +29,7 @@ internal class CardDescriptionHelperImpl : CardDescriptionHelper {
         builder.append(HEADER)
         val textWithBold = text
             .replace("'", " ")
+            .replace("\\n", "\n")
             .replace("\n", "<br>")
             .replace(
                 "(?i)$term".toRegex(),

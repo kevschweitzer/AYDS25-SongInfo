@@ -42,14 +42,14 @@
                 android:text="View Full Article" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/sourceImage2ImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:paddingTop="24dp"/>
 
             <TextView
-                android:id="@+id/textPane2"
+                android:id="@+id/cardContent2TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
@@ -57,22 +57,21 @@
                 android:padding="16dp" />
 
             <Button
-                android:id="@+id/openUrlButton2"
-                android:visibility="gone"
+                android:id="@+id/openUrl2Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="View Full Article" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/sourceImage3ImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:paddingTop="24dp"/>
 
             <TextView
-                android:id="@+id/textPane3"
+                android:id="@+id/cardContent3TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
@@ -80,8 +79,7 @@
                 android:padding="16dp" />
 
             <Button
-                android:id="@+id/openUrlButton3"
-                android:visibility="gone"
+                android:id="@+id/openUrl3Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"

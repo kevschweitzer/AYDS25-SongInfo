@@ -2,5 +2,5 @@ package ayds.songinfo.moredetails.domain
 
 
 interface OtherInfoRepository {
-    fun getCard(artistName: String): Card
+    fun getCard(artistName: String): List<Card>
 }

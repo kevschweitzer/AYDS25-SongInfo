@@ -17,15 +17,17 @@ class OtherInfoPresenterTest {
 
     @Test
     fun `getArtistInfo should return artist biography ui state`() {
-        val card = Card("artistName", "biography", "articleUrl", CardSource.LAST_FM)
-        every { otherInfoRepository.getCard("artistName") } returns card
+        val card = Card("artistName", "biography", "articleUrl", "logoUrl", CardSource.LAST_FM)
+        every { otherInfoRepository.getCard("artistName") } returns listOf(card)
         every { cardDescriptionHelper.getDescription(card) } returns "description"
-        val artistBiographyTester: (CardUiState) -> Unit = mockk(relaxed = true)
+        val artistBiographyTester: (CardsUiState) -> Unit = mockk(relaxed = true)
 
         otherInfoPresenter.cardObservable.subscribe(artistBiographyTester)
         otherInfoPresenter.updateCard("artistName")
 
-        val result = CardUiState("artistName", "description", "articleUrl")
+        val result = CardsUiState(
+            listOf(CardUiState("artistName", "description", "articleUrl", "logoUrl"))
+        )
         verify { artistBiographyTester(result) }
     }
 }
