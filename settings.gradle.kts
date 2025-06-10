@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "AYDS25-SongInfo"
 include(":app")
 include(":observer")
+include(":external")
