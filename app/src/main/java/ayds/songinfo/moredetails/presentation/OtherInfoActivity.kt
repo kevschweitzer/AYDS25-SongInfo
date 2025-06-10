@@ -13,9 +13,15 @@ import ayds.songinfo.moredetails.injector.OtherInfoInjector
 import com.squareup.picasso.Picasso
 
 class OtherInfoActivity : Activity() {
-    private lateinit var articleTextView: TextView
-    private lateinit var openUrlButton: Button
-    private lateinit var lastFMImageView: ImageView
+    private lateinit var cardContent1TextView: TextView
+    private lateinit var openUrl1Button: Button
+    private lateinit var source1ImageView: ImageView
+    private lateinit var cardContent2TextView: TextView
+    private lateinit var openUrl2Button: Button
+    private lateinit var sourceImage2View: ImageView
+    private lateinit var cardContent3TextView: TextView
+    private lateinit var openUrl3Button: Button
+    private lateinit var sourceImage3View: ImageView
 
     private lateinit var presenter: OtherInfoPresenter
 
@@ -27,7 +33,7 @@ class OtherInfoActivity : Activity() {
         initPresenter()
 
         observePresenter()
-        getArtistInfoAsync()
+        getArtistCardAsync()
     }
 
     private fun initPresenter() {
@@ -36,37 +42,61 @@ class OtherInfoActivity : Activity() {
     }
 
     private fun observePresenter() {
-        presenter.artistBiographyObservable.subscribe { artistBiography ->
+        presenter.cardObservable.subscribe { artistBiography ->
             updateUi(artistBiography)
         }
     }
 
     private fun initViewProperties() {
-        articleTextView = findViewById(R.id.textPane1)
-        openUrlButton = findViewById(R.id.openUrlButton)
-        lastFMImageView = findViewById(R.id.lastFMImageView)
+        cardContent1TextView = findViewById(R.id.cardContent1TextView)
+        openUrl1Button = findViewById(R.id.openUrl1Button)
+        source1ImageView = findViewById(R.id.sourceImage1ImageView)
+        cardContent2TextView = findViewById(R.id.cardContent2TextView)
+        openUrl2Button = findViewById(R.id.openUrl2Button)
+        sourceImage2View = findViewById(R.id.sourceImage2ImageView)
+        cardContent3TextView = findViewById(R.id.cardContent3TextView)
+        openUrl3Button = findViewById(R.id.openUrl3Button)
+        sourceImage3View = findViewById(R.id.sourceImage3ImageView)
     }
 
-    private fun getArtistInfoAsync() {
+    private fun getArtistCardAsync() {
         Thread {
-            getArtistInfo()
+            getArtistCard()
         }.start()
     }
 
-    private fun getArtistInfo() {
+    private fun getArtistCard() {
         val artistName = getArtistName()
-        presenter.getArtistInfo(artistName)
+        presenter.updateCard(artistName)
     }
 
-    private fun updateUi(uiState: ArtistBiographyUiState) {
+    private fun updateUi(uiState: CardsUiState) {
         runOnUiThread {
-            updateOpenUrlButton(uiState.articleUrl)
-            updateLastFMLogo(uiState.imageUrl)
-            updateArticleText(uiState.infoHtml)
+            uiState.cards.getOrNull(0)?.let { updateCard1(it) }
+            uiState.cards.getOrNull(1)?.let { updateCard2(it) }
+            uiState.cards.getOrNull(2)?.let { updateCard3(it) }
         }
     }
 
-    private fun updateOpenUrlButton(url: String) {
+    private fun updateCard1(card: CardUiState) {
+        updateOpenUrlButton(openUrl1Button, card.url)
+        updateSourceLogo(source1ImageView, card.imageUrl)
+        updateCardText(cardContent1TextView, card.contentHtml)
+    }
+
+    private fun updateCard2(card: CardUiState) {
+        updateOpenUrlButton(openUrl2Button, card.url)
+        updateSourceLogo(sourceImage2View, card.imageUrl)
+        updateCardText(cardContent2TextView, card.contentHtml)
+    }
+
+    private fun updateCard3(card: CardUiState) {
+        updateOpenUrlButton(openUrl3Button, card.url)
+        updateSourceLogo(sourceImage3View, card.imageUrl)
+        updateCardText(cardContent3TextView, card.contentHtml)
+    }
+
+    private fun updateOpenUrlButton(openUrlButton: Button, url: String) {
         openUrlButton.setOnClickListener {
             navigateToUrl(url)
         }
@@ -78,15 +108,15 @@ class OtherInfoActivity : Activity() {
         startActivity(intent)
     }
 
-    private fun updateLastFMLogo(url: String) {
-        Picasso.get().load(url).into(lastFMImageView)
+    private fun updateSourceLogo(sourceImageView: ImageView, url: String) {
+        Picasso.get().load(url).into(sourceImageView)
     }
 
     private fun getArtistName() =
         intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
 
-    private fun updateArticleText(infoHtml: String) {
-        articleTextView.text = Html.fromHtml(infoHtml)
+    private fun updateCardText(cardContentTextView: TextView,infoHtml: String) {
+        cardContentTextView.text = Html.fromHtml(infoHtml)
     }
 
     companion object {

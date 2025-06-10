@@ -1,32 +1,31 @@
 package ayds.songinfo.moredetails.data
 
-import ayds.songinfo.moredetails.data.external.OtherInfoService
+import ayds.songinfo.moredetails.data.broker.OtherInfoBroker
 import ayds.songinfo.moredetails.data.local.OtherInfoLocalStorage
-import ayds.songinfo.moredetails.domain.ArtistBiography
+import ayds.songinfo.moredetails.domain.Card
 import ayds.songinfo.moredetails.domain.OtherInfoRepository
 
-class OtherInfoRepositoryImpl(
+internal class OtherInfoRepositoryImpl(
     private val otherInfoLocalStorage: OtherInfoLocalStorage,
-    private val otherInfoService: OtherInfoService
-): OtherInfoRepository {
+    private val otherInfoBroker: OtherInfoBroker
+) : OtherInfoRepository {
 
-    override fun getArtistInfo(artistName: String): ArtistBiography {
+    override fun getCard(artistName: String): List<Card> {
+        val dbCard = otherInfoLocalStorage.getCard(artistName)
 
-        val dbArticle = otherInfoLocalStorage.getArticle(artistName)
-
-        val artistBiography: ArtistBiography
-
-        if (dbArticle != null) {
-            artistBiography = dbArticle.markItAsLocal()
+        if (dbCard.isNotEmpty()) {
+            return dbCard.apply { markItAsLocal() }
         } else {
-            artistBiography = otherInfoService.getArticle(artistName)
-            if (artistBiography.biography.isNotEmpty()) {
-                otherInfoLocalStorage.insertArtist(artistBiography)
-            }
+            val cards = otherInfoBroker.getCards(artistName)
+
+            cards.forEach { otherInfoLocalStorage.insertCard(it) }
+
+            return cards
         }
-        return artistBiography
     }
 
-    private fun ArtistBiography.markItAsLocal() = copy(isLocallyStored = true)
+    private fun List<Card>.markItAsLocal() {
+        this.forEach { it.isLocallyStored = true }
 
+    }
 }
